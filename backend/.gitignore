@@ -1,0 +1,5 @@
+env
+requirements.txt
+pylintrc
+.vscode
+_pycache_
