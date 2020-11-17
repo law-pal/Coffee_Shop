@@ -163,7 +163,10 @@ def verify_decode_jwt(token):
         'description': 'Unable to parse authentication token.'
         }, 400)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0c518026279dec275e8cc1d52b0ce00efdec299f
 
 '''
 @TODO implement @requires_auth(permission) decorator method
