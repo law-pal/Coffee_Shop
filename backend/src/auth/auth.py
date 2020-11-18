@@ -163,11 +163,6 @@ def verify_decode_jwt(token):
         'description': 'Unable to parse authentication token.'
         }, 400)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0c518026279dec275e8cc1d52b0ce00efdec299f
-
 '''
 @TODO implement @requires_auth(permission) decorator method
     @INPUTS
@@ -183,7 +178,13 @@ def requires_auth(permission=''):
         @wraps(f)
         def wrapper(*args, **kwargs):
             token = get_token_auth_header()
-            payload = verify_decode_jwt(token)
+            try:
+                payload = verify_decode_jwt(token)
+            except:
+                raise AuthError({
+                    'code': 'invalid_token',
+                    'description': 'Access denied due to invalid token.'
+                    }, 401)
             check_permissions(permission, payload)
             return f(payload, *args, **kwargs)
 
