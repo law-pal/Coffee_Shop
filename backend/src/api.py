@@ -74,7 +74,7 @@ def get_drinks_detail(jwt):
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
 def create_drink(jwt):
-    body = request.json()
+    body = request.get_json()
 
     if not ('title' in body and 'recipe' in body):
         abort(422)
@@ -88,7 +88,7 @@ def create_drink(jwt):
 
         return jsonify({
             'success': True,
-            'drinks': [drink.long()]
+            'drinks': [drink.long()],
         })
 
     except:
@@ -142,7 +142,7 @@ def update_drink(jwt, id):
     returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
         or appropriate status code indicating reason for failure
 '''
-@app.route('drinks/<id>', methods=['DELETE'])
+@app.route('/drinks/<id>', methods=['DELETE'])
 @requires_auth('delete:drinks')
 def delete_drinks(jwt, id):
     drink = Drink.query.get(id)

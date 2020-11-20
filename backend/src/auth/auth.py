@@ -32,7 +32,7 @@ class AuthError(Exception):
 '''
 def get_token_auth_header():
     #Obtains token from header
-    auth = request.headers('Authorization', None)
+    auth = request.headers.get('Authorization', None)
 
     if not auth:
         raise AuthError({
