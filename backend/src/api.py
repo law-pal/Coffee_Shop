@@ -35,7 +35,7 @@ def get_drinks():
         return jsonify({
             'success': True,
             'drinks': [drink.short() for drink in drinks]
-        })
+        }, 200)
 
     except:
         abort(404)
@@ -71,28 +71,39 @@ def get_drinks_detail(jwt):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the newly created drink
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks', methods=['POST'])
+@app.route('/drinks', methods=['POST'], endpoint='post_drink')
 @requires_auth('post:drinks')
-def create_drink(jwt):
-    body = request.get_json()
+def create_drink(f):
+    body = dict(request.form or request.json or request.data)
+    drink =Drink(title=body.get('title'),
+                 recipe=body.get('recipe') if type(body.get('recipe')) == str
+                 else json.dumps(body.get('recipe')))
 
-    if not ('title' in body and 'recipe' in body):
-        abort(422)
+    # if not ('title' in body and 'recipe' in body):
+    #     abort(422)
 
-    title = body.get('title')
-    recipe = body.get('recipe')
+    # title = body.get('title')
+    # recipe = body.get('recipe')
 
     try:
-        drink = Drink(title=title, recipe=json.dumps(recipe))
         drink.insert()
-
-        return jsonify({
-            'success': True,
-            'drinks': [drink.long()],
-        })
+        return json.dumps({'success': True, 'drink': drink.long()}, 200)
 
     except:
-        abort(422)
+        return json.dumps({
+            'success': False,
+            'error': 'An error ocurred'
+        }), 500
+        # drink = Drink(title=title, recipe=json.dumps(recipe))
+        # drink.insert()
+
+    #     return jsonify({
+    #         'success': True,
+    #         'drinks': [drink.long()],
+    #     })
+
+    # except:
+    #     abort(422)
 '''
 @TODO implement endpoint
     PATCH /drinks/<id>
@@ -104,32 +115,56 @@ def create_drink(jwt):
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
-@app.route('/drinks/<id>', methods=['PATCH'])
+@app.route('/drinks/<id>', methods=['PATCH'], endpoint='patch_drink')
 @requires_auth('patch:drinks')
-def update_drink(jwt, id):
-    drink = Drink.query.get(id)
+def update_drink(f, id):
+    # drink = Drink.query.get(id)
 
-    if drink:
-        try:
-            body = request.get_json()
-            title = body.get('title')
-            recipe = body.get('recipe')
+    # if drink:
+    #     try:
+    #         body = request.get_json()
+    #         title = body.get('title')
+    #         recipe = body.get('recipe')
 
-            if title:
-                drink.title = title
-            if recipe:
-                drink.title = recipe
+    #         if title:
+    #             drink.title = title
+    #         if recipe:
+    #             drink.title = recipe
 
+    #         drink.update()
+
+    #         return jsonify({
+    #             'success': True,
+    #             'drinks': [drink.long()]
+    #         })
+    #     except:
+    #         abort(422)
+    # else:
+    #     abort(404)
+    try:
+        data = dict(request.form or request.json or request.data)
+        drink = drink = Drink.query.filter(Drink.id == id).one_or_none()
+        if drink:
+            drink.title = data.get('title') if data.get(
+                'title') else drink.title
+            recipe = data.get('recipe') if data.get('recipe') else drink.recipe
+            drink.recipe = recipe if type(recipe) == str else json.dumps(
+                recipe)
             drink.update()
+            return json.dumps({'success': True, 'drinks': [drink.long()]}), 200
+        else:
+            return json.dumps({
+                'success':
+                False,
+                'error':
+                'Drink #' + id + ' not found to be edited'
+            }), 404
+    except:
+        return json.dumps({
+            'success': False,
+            'error': "An error occurred"
+        }), 500
 
-            return jsonify({
-                'success': True,
-                'drinks': [drink.long()]
-            })
-        except:
-            abort(422)
-    else:
-        abort(404)
 
 
 '''

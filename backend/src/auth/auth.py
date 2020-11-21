@@ -41,6 +41,7 @@ def get_token_auth_header():
             }, 401)
 
     parts = auth.split()
+
     if parts[0].lower() != 'bearer':
         raise AuthError({
             'code': 'invalid_header',
@@ -74,19 +75,35 @@ def get_token_auth_header():
     return true otherwise
 '''
 def check_permissions(permission, payload):
-    if 'permissions' not in payload:
-         raise AuthError({
-            'code': 'invalid_claims',
-            'description': 'Permission not included in JWT'
-            }, 400)
+    # if 'permissions' not in payload:
+    #      raise AuthError({
+    #         'code': 'invalid_claims',
+    #         'description': 'Permission not included in JWT'
+    #         }, 400)
 
-    if permission not in payload['permissions']:
-         raise AuthError({
-            'code': 'unauthorized',
-            'description': 'Permission not found'
-            }, 403)
+    # if permission not in payload['permissions']:
+    #      raise AuthError({
+    #         'code': 'unauthorized',
+    #         'description': 'Permission not found'
+    #         }, 403)
 
-    return True
+    # return True
+    if payload.get('permissions'):
+        token_scopes = payload.get("permissions")
+        if (permission not in token_scopes):
+            raise AuthError(
+                {
+                    'code': 'invalid_permissions',
+                    'description': 'User does not have enough privileges'
+                }, 401)
+        else:
+            return True
+    else:
+        raise AuthError(
+            {
+                'code': 'invalid_permissions',
+                'description': 'User does not have any roles attached'
+            }, 401)
 
 '''
 @TODO implement verify_decode_jwt(token) method
