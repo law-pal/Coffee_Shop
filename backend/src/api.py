@@ -79,12 +79,6 @@ def create_drink(f):
                  recipe=body.get('recipe') if type(body.get('recipe')) == str
                  else json.dumps(body.get('recipe')))
 
-    # if not ('title' in body and 'recipe' in body):
-    #     abort(422)
-
-    # title = body.get('title')
-    # recipe = body.get('recipe')
-
     try:
         drink.insert()
         return json.dumps({'success': True, 'drink': drink.long()}, 200)
@@ -94,6 +88,12 @@ def create_drink(f):
             'success': False,
             'error': 'An error ocurred'
         }), 500
+
+    # if not ('title' in body and 'recipe' in body):
+    #     abort(422)
+
+    # title = body.get('title')
+    # recipe = body.get('recipe')
         # drink = Drink(title=title, recipe=json.dumps(recipe))
         # drink.insert()
 
@@ -118,29 +118,7 @@ def create_drink(f):
 @app.route('/drinks/<id>', methods=['PATCH'], endpoint='patch_drink')
 @requires_auth('patch:drinks')
 def update_drink(f, id):
-    # drink = Drink.query.get(id)
-
-    # if drink:
-    #     try:
-    #         body = request.get_json()
-    #         title = body.get('title')
-    #         recipe = body.get('recipe')
-
-    #         if title:
-    #             drink.title = title
-    #         if recipe:
-    #             drink.title = recipe
-
-    #         drink.update()
-
-    #         return jsonify({
-    #             'success': True,
-    #             'drinks': [drink.long()]
-    #         })
-    #     except:
-    #         abort(422)
-    # else:
-    #     abort(404)
+   
     try:
         data = dict(request.form or request.json or request.data)
         drink = drink = Drink.query.filter(Drink.id == id).one_or_none()
@@ -164,6 +142,30 @@ def update_drink(f, id):
             'success': False,
             'error': "An error occurred"
         }), 500
+
+     # drink = Drink.query.get(id)
+
+    # if drink:
+    #     try:
+    #         body = request.get_json()
+    #         title = body.get('title')
+    #         recipe = body.get('recipe')
+
+    #         if title:
+    #             drink.title = title
+    #         if recipe:
+    #             drink.title = recipe
+
+    #         drink.update()
+
+    #         return jsonify({
+    #             'success': True,
+    #             'drinks': [drink.long()]
+    #         })
+    #     except:
+    #         abort(422)
+    # else:
+    #     abort(404)
 
 
 
