@@ -89,21 +89,6 @@ def create_drink(f):
             'error': 'An error ocurred'
         }), 500
 
-    # if not ('title' in body and 'recipe' in body):
-    #     abort(422)
-
-    # title = body.get('title')
-    # recipe = body.get('recipe')
-        # drink = Drink(title=title, recipe=json.dumps(recipe))
-        # drink.insert()
-
-    #     return jsonify({
-    #         'success': True,
-    #         'drinks': [drink.long()],
-    #     })
-
-    # except:
-    #     abort(422)
 '''
 @TODO implement endpoint
     PATCH /drinks/<id>
@@ -143,32 +128,7 @@ def update_drink(f, id):
             'error': "An error occurred"
         }), 500
 
-     # drink = Drink.query.get(id)
-
-    # if drink:
-    #     try:
-    #         body = request.get_json()
-    #         title = body.get('title')
-    #         recipe = body.get('recipe')
-
-    #         if title:
-    #             drink.title = title
-    #         if recipe:
-    #             drink.title = recipe
-
-    #         drink.update()
-
-    #         return jsonify({
-    #             'success': True,
-    #             'drinks': [drink.long()]
-    #         })
-    #     except:
-    #         abort(422)
-    # else:
-    #     abort(404)
-
-
-
+   
 '''
 @TODO implement endpoint
     DELETE /drinks/<id>

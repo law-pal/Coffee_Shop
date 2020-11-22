@@ -75,19 +75,7 @@ def get_token_auth_header():
     return true otherwise
 '''
 def check_permissions(permission, payload):
-    # if 'permissions' not in payload:
-    #      raise AuthError({
-    #         'code': 'invalid_claims',
-    #         'description': 'Permission not included in JWT'
-    #         }, 400)
-
-    # if permission not in payload['permissions']:
-    #      raise AuthError({
-    #         'code': 'unauthorized',
-    #         'description': 'Permission not found'
-    #         }, 403)
-
-    # return True
+   
     if payload.get('permissions'):
         token_scopes = payload.get("permissions")
         if (permission not in token_scopes):
